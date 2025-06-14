@@ -35,7 +35,40 @@ chatapp-*.tar
 npm-debug.log
 /assets/node_modules/
 
-
+# Environment variables and secrets
 .env
+.env.*
+!.env.example
 
+# Secret configuration files
+/config/*.secret.exs
+/config/prod.secret.exs
+/config/dev.secret.exs
+/config/test.secret.exs
+
+# Runtime configuration with secrets
+/config/runtime.secret.exs
+
+# Encrypted credentials (if using cloak or similar)
+/config/credentials.json.enc
+/config/master.key
+
+# Local development overrides
+/config/dev.local.exs
+/config/test.local.exs
+
+# IDE files
 .idea/
+.vscode/
+*.swp
+*.swo
+*~
+
+# OS generated files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
