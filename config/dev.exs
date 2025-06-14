@@ -26,7 +26,9 @@ config :chatapp, ChatappWeb.Endpoint,
   check_origin: false,
   code_reloader: true,
   debug_errors: true,
-  secret_key_base: System.get_env("SECRET_KEY_BASE") || "4oSBZ3hY6aTOLVQQuenZ60h2FOkpgK0PLFX1MT1whsWNlTP2/8ygeh2IVuPX1NGR",
+  secret_key_base:
+    System.get_env("SECRET_KEY_BASE") ||
+      "4oSBZ3hY6aTOLVQQuenZ60h2FOkpgK0PLFX1MT1whsWNlTP2/8ygeh2IVuPX1NGR",
   watchers: [
     esbuild: {Esbuild, :install_and_run, [:chatapp, ~w(--sourcemap=inline --watch)]},
     tailwind: {Tailwind, :install_and_run, [:chatapp, ~w(--watch)]}
