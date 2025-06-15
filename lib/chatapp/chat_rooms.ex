@@ -1,12 +1,13 @@
-defmodule Chatapp.Chat do
+defmodule Chatapp.ChatRooms do
   @moduledoc """
-  The Chat context.
+  The ChatRooms context.
   """
 
   import Ecto.Query, warn: false
   alias Chatapp.Repo
 
   alias Chatapp.ChatRoom
+  alias Chatapp.Accounts.User
 
   @doc """
   Returns the list of chat_rooms.
@@ -38,21 +39,18 @@ defmodule Chatapp.Chat do
   def get_chat_room!(id), do: Repo.get!(ChatRoom, id)
 
   @doc """
-  Gets a single chat_room by name.
-
-  Returns `nil` if the Chat room does not exist.
+  Gets a single chat_room with preloaded associations.
 
   ## Examples
 
-      iex> get_chat_room_by_name("general")
-      %ChatRoom{}
-
-      iex> get_chat_room_by_name("nonexistent")
-      nil
+      iex> get_chat_room_with_users!(123)
+      %ChatRoom{users: [...]}
 
   """
-  def get_chat_room_by_name(name) do
-    Repo.get_by(ChatRoom, name: name)
+  def get_chat_room_with_users!(id) do
+    ChatRoom
+    |> Repo.get!(id)
+    |> Repo.preload(:users)
   end
 
   @doc """
@@ -118,5 +116,66 @@ defmodule Chatapp.Chat do
   """
   def change_chat_room(%ChatRoom{} = chat_room, attrs \\ %{}) do
     ChatRoom.changeset(chat_room, attrs)
+  end
+
+  @doc """
+  Adds a user to a chat room.
+
+  ## Examples
+
+      iex> join_chat_room(chat_room, user)
+      {:ok, %ChatRoom{}}
+
+      iex> join_chat_room(chat_room, user)
+      {:error, %Ecto.Changeset{}}
+
+  """
+  def join_chat_room(%ChatRoom{} = chat_room, %User{} = user) do
+    chat_room = Repo.preload(chat_room, :users)
+
+    if user in chat_room.users do
+      {:ok, chat_room}
+    else
+      chat_room
+      |> Ecto.Changeset.change()
+      |> Ecto.Changeset.put_assoc(:users, [user | chat_room.users])
+      |> Repo.update()
+    end
+  end
+
+  @doc """
+  Removes a user from a chat room.
+
+  ## Examples
+
+      iex> leave_chat_room(chat_room, user)
+      {:ok, %ChatRoom{}}
+
+  """
+  def leave_chat_room(%ChatRoom{} = chat_room, %User{} = user) do
+    chat_room = Repo.preload(chat_room, :users)
+
+    updated_users = Enum.reject(chat_room.users, fn u -> u.id == user.id end)
+
+    chat_room
+    |> Ecto.Changeset.change()
+    |> Ecto.Changeset.put_assoc(:users, updated_users)
+    |> Repo.update()
+  end
+
+  @doc """
+  Gets chat rooms that a user has joined.
+
+  ## Examples
+
+      iex> get_user_chat_rooms(user)
+      [%ChatRoom{}, ...]
+
+  """
+  def get_user_chat_rooms(%User{} = user) do
+    ChatRoom
+    |> join(:inner, [cr], u in assoc(cr, :users))
+    |> where([cr, u], u.id == ^user.id)
+    |> Repo.all()
   end
 end
