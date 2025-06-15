@@ -1,0 +1,56 @@
+<.header>
+  채팅방 목록
+  <:actions>
+    <%= if assigns[:current_scope] do %>
+      <.link href={~p"/chat_rooms/new"} class="btn btn-primary">
+        새 채팅방 만들기
+      </.link>
+    <% else %>
+      <.link href={~p"/users/log-in"} class="btn btn-primary">
+        로그인하여 채팅방 만들기
+      </.link>
+    <% end %>
+  </:actions>
+</.header>
+
+<div class="mt-8">
+  <div id="chat_rooms" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+    <%= for chat_room <- @chat_rooms do %>
+      <div class="bg-white rounded-lg shadow-md p-6 hover:shadow-lg transition-shadow">
+        <h3 class="text-xl font-semibold text-gray-900 mb-2">
+          <%= chat_room.name %>
+        </h3>
+        <%= if chat_room.description do %>
+          <p class="text-gray-600 mb-4">
+            <%= chat_room.description %>
+          </p>
+        <% end %>
+        <div class="flex justify-between items-center">
+          <span class="text-sm text-gray-500">
+            생성일: <%= Calendar.strftime(chat_room.inserted_at, "%Y-%m-%d") %>
+          </span>
+          <button class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+            참여하기
+          </button>
+        </div>
+      </div>
+    <% end %>
+  </div>
+
+  <%= if @chat_rooms == [] do %>
+    <div class="text-center py-12">
+      <div class="text-gray-500 text-lg mb-4">
+        아직 생성된 채팅방이 없습니다.
+      </div>
+      <%= if assigns[:current_scope] do %>
+        <.link href={~p"/chat_rooms/new"} class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+          첫 번째 채팅방 만들기
+        </.link>
+      <% else %>
+        <.link href={~p"/users/log-in"} class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+          로그인하여 첫 번째 채팅방 만들기
+        </.link>
+      <% end %>
+    </div>
+  <% end %>
+</div> 

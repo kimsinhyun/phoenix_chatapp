@@ -4,7 +4,7 @@ defmodule ChatappWeb.PageController do
   def home(conn, _params) do
     # The home page is often custom made,
     # so skip the default app layout.
-    render(conn, :home, layout: false)
+    render(conn, :home, layout: false, current_scope: conn.assigns[:current_scope])
   end
 
   def users(conn, _params) do

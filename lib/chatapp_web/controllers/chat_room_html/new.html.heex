@@ -1,0 +1,18 @@
+<.header>
+  새 채팅방 만들기
+  <:subtitle>새로운 채팅방을 생성하여 대화를 시작해보세요.</:subtitle>
+</.header>
+
+<.form :let={f} for={@changeset} action={~p"/chat_rooms"}>
+  <div :if={@changeset.action} class="alert alert-error mb-4">
+    <span>문제가 발생했습니다. 아래 오류를 확인해주세요.</span>
+  </div>
+  
+  <.input field={f[:name]} type="text" label="채팅방 이름" required />
+  <.input field={f[:description]} type="textarea" label="설명 (선택사항)" />
+  
+  <div class="mt-6 flex items-center justify-between">
+    <.link navigate={~p"/chat_rooms"} class="btn btn-ghost">목록으로 돌아가기</.link>
+    <.button type="submit">채팅방 생성</.button>
+  </div>
+</.form> 

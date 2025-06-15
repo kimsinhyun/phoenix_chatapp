@@ -57,11 +57,38 @@
     </div>
 
     <p class="text-[2rem] mt-4 font-semibold leading-10 tracking-tighter text-balance">
-      Peace of mind from prototype to production.
+      실시간 채팅 애플리케이션에 오신 것을 환영합니다!
     </p>
     <p class="mt-4 leading-7 text-base-content/70">
-      Build rich, interactive web applications quickly, with less code and fewer moving parts. Join our growing community of developers using Phoenix to craft APIs, HTML5 apps and more, for fun or at scale.
+      Phoenix Framework와 LiveView를 사용하여 구축된 실시간 채팅 애플리케이션입니다. 
+      다양한 채팅방에 참여하거나 새로운 채팅방을 만들어 대화를 시작해보세요.
     </p>
+    
+    <!-- 채팅방 바로가기 버튼 -->
+    <div class="mt-8 flex gap-4">
+      <a
+        href={~p"/chat_rooms"}
+        class="group relative rounded-lg bg-blue-500 hover:bg-blue-600 px-6 py-3 text-white font-semibold transition-colors"
+      >
+        채팅방 둘러보기
+      </a>
+      <%= if assigns[:current_scope] do %>
+        <a
+          href={~p"/chat_rooms/new"}
+          class="group relative rounded-lg border border-gray-300 hover:border-gray-400 px-6 py-3 text-gray-700 font-semibold transition-colors"
+        >
+          새 채팅방 만들기
+        </a>
+      <% else %>
+        <a
+          href={~p"/users/log-in"}
+          class="group relative rounded-lg border border-gray-300 hover:border-gray-400 px-6 py-3 text-gray-700 font-semibold transition-colors"
+        >
+          로그인하여 채팅방 만들기
+        </a>
+      <% end %>
+    </div>
+    
     <div class="flex">
       <div class="w-full sm:w-auto">
         <div class="mt-10 grid grid-cols-1 gap-x-6 gap-y-4 sm:grid-cols-3">

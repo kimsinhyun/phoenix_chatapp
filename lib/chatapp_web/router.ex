@@ -23,6 +23,9 @@ defmodule ChatappWeb.Router do
     get "/", PageController, :home
     get "/users", PageController, :users
     get "/chat", PageController, :chat
+
+    # ChatRoom 목록은 누구나 볼 수 있음
+    get "/chat_rooms", ChatRoomController, :index
   end
 
   scope "/api", ChatappWeb do
@@ -65,6 +68,10 @@ defmodule ChatappWeb.Router do
     end
 
     post "/users/update-password", UserSessionController, :update_password
+
+    # ChatRoom 생성은 로그인이 필요함
+    get "/chat_rooms/new", ChatRoomController, :new
+    post "/chat_rooms", ChatRoomController, :create
   end
 
   scope "/", ChatappWeb do
