@@ -24,6 +24,20 @@ defmodule ChatappWeb.ChatRoomController do
     )
   end
 
+  def show(conn, %{"id" => id}) do
+    chat_room = ChatRooms.get_chat_room_with_users!(id)
+    current_scope = conn.assigns[:current_scope]
+
+    # 현재 사용자가 참여한 채팅방인지 확인
+    is_member = if current_scope do
+      ChatRooms.is_user_member_of_chat_room?(current_scope.user.id, chat_room.id)
+    else
+      false
+    end
+
+    render(conn, :show, chat_room: chat_room, is_member: is_member, current_scope: current_scope)
+  end
+
   def new(conn, _params) do
     changeset = ChatRooms.change_chat_room(%ChatRoom{})
     render(conn, :new, changeset: changeset)
@@ -49,12 +63,12 @@ defmodule ChatappWeb.ChatRoomController do
         {:ok, _member} ->
           conn
           |> put_flash(:info, "채팅방에 성공적으로 참여했습니다.")
-          |> redirect(to: ~p"/chat_rooms")
+          |> redirect(to: ~p"/chat_rooms/#{chat_room_id}")
 
         {:error, %Ecto.Changeset{errors: [user_id: {_, [constraint: :unique, constraint_name: _]}]}} ->
           conn
           |> put_flash(:info, "이미 참여한 채팅방입니다.")
-          |> redirect(to: ~p"/chat_rooms")
+          |> redirect(to: ~p"/chat_rooms/#{chat_room_id}")
 
         {:error, _changeset} ->
           conn

@@ -230,4 +230,17 @@ defmodule Chatapp.ChatRooms do
     |> where([m], m.chat_room_id == ^chat_room_id and m.user_id == ^user_id)
     |> Repo.exists?()
   end
+
+  @doc """
+  Checks if a user is a member of a chat room (alternative function name).
+
+  ## Examples
+
+      iex> is_user_member_of_chat_room?(user_id, chat_room_id)
+      true
+
+  """
+  def is_user_member_of_chat_room?(user_id, chat_room_id) do
+    is_member?(chat_room_id, user_id)
+  end
 end

@@ -26,6 +26,7 @@ defmodule ChatappWeb.Router do
 
     # ChatRoom 목록은 누구나 볼 수 있음
     get "/chat_rooms", ChatRoomController, :index
+    get "/chat_rooms/:id", ChatRoomController, :show
     # ChatRoom 참여는 누구나 시도할 수 있음 (로그인 체크는 컨트롤러에서)
     post "/chat_rooms/:id/join", ChatRoomController, :join
   end
