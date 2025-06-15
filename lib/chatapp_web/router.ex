@@ -26,7 +26,10 @@ defmodule ChatappWeb.Router do
 
     # ChatRoom 목록은 누구나 볼 수 있음
     get "/chat_rooms", ChatRoomController, :index
-    get "/chat_rooms/:id", ChatRoomController, :show
+    # ChatRoom show 페이지를 LiveView로 변경
+    live_session :chat_room_show, on_mount: [{ChatappWeb.UserAuth, :mount_current_scope}] do
+      live "/chat_rooms/:id", ChatRoomLive.Show, :show
+    end
     # ChatRoom 참여는 누구나 시도할 수 있음 (로그인 체크는 컨트롤러에서)
     post "/chat_rooms/:id/join", ChatRoomController, :join
     delete "/chat_rooms/:id/leave", ChatRoomController, :leave
