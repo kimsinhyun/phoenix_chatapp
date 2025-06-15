@@ -22,6 +22,7 @@ defmodule ChatappWeb.Router do
 
     get "/", PageController, :home
     get "/users", PageController, :users
+    get "/chat", PageController, :chat
   end
 
   scope "/api", ChatappWeb do

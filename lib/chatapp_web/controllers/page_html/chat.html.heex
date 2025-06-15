@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>채팅방</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        .chat-container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+        .chat-header {
+            background: #4a90e2;
+            color: white;
+            padding: 20px;
+            text-align: center;
+        }
+        .messages {
+            height: 400px;
+            overflow-y: auto;
+            padding: 20px;
+            border-bottom: 1px solid #eee;
+        }
+        .message {
+            margin-bottom: 10px;
+            padding: 10px;
+            background: #f8f9fa;
+            border-radius: 5px;
+        }
+        .message strong {
+            color: #4a90e2;
+        }
+        .input-container {
+            padding: 20px;
+            display: flex;
+            gap: 10px;
+        }
+        .message-input {
+            flex: 1;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 16px;
+        }
+        .send-button {
+            padding: 10px 20px;
+            background: #4a90e2;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        .send-button:hover {
+            background: #357abd;
+        }
+        .name-input {
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 16px;
+            width: 120px;
+        }
+        .status {
+            padding: 10px 20px;
+            background: #e8f5e8;
+            color: #2d5a2d;
+            text-align: center;
+            font-size: 14px;
+        }
+    </style>
+</head>
+<body>
+    <div class="chat-container">
+        <div class="chat-header">
+            <h1>실시간 채팅방</h1>
+        </div>
+        
+        <div class="status" id="status">
+            연결 중...
+        </div>
+        
+        <div class="messages" id="messages">
+            <!-- 메시지들이 여기에 표시됩니다 -->
+        </div>
+        
+        <div class="input-container">
+            <input type="text" id="nameInput" class="name-input" placeholder="이름" value="익명">
+            <input type="text" id="messageInput" class="message-input" placeholder="메시지를 입력하세요..." onkeypress="handleKeyPress(event)">
+            <button onclick="sendMessage()" class="send-button">전송</button>
+        </div>
+    </div>
+
+    <script>
+        // 채널 연결 상태 확인
+        function checkConnection() {
+            if (window.channel) {
+                document.getElementById('status').textContent = '연결됨 - 메시지를 보낼 수 있습니다!';
+                document.getElementById('status').style.background = '#e8f5e8';
+            } else {
+                document.getElementById('status').textContent = '연결 중... 잠시만 기다려주세요.';
+                document.getElementById('status').style.background = '#fff3cd';
+                setTimeout(checkConnection, 1000);
+            }
+        }
+        
+        // 페이지 로드 시 연결 상태 확인
+        checkConnection();
+        
+        // 메시지 전송 함수
+        function sendMessage() {
+            const messageInput = document.getElementById('messageInput');
+            const nameInput = document.getElementById('nameInput');
+            const message = messageInput.value.trim();
+            const name = nameInput.value.trim() || '익명';
+            
+            if (message && window.channel) {
+                window.channel.push("shout", {
+                    name: name,
+                    body: message
+                });
+                messageInput.value = '';
+            } else if (!window.channel) {
+                alert('채널에 연결되지 않았습니다. 잠시 후 다시 시도해주세요.');
+            }
+        }
+        
+        // 엔터키로 메시지 전송
+        function handleKeyPress(event) {
+            if (event.key === 'Enter') {
+                sendMessage();
+            }
+        }
+        
+        // 메시지 입력 필드에 포커스
+        document.getElementById('messageInput').focus();
+    </script>
+</body>
+</html> 

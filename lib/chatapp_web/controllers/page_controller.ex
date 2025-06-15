@@ -19,4 +19,8 @@ defmodule ChatappWeb.PageController do
 
     render(conn, :users, users: users, layout: false)
   end
+
+  def chat(conn, _params) do
+    render(conn, :chat)
+  end
 end
