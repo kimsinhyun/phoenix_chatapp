@@ -6,7 +6,7 @@ defmodule Chatapp.ChatRooms do
   import Ecto.Query, warn: false
   alias Chatapp.Repo
 
-  alias Chatapp.ChatRoom
+  alias Chatapp.ChatRooms.ChatRoom
   alias Chatapp.Accounts.User
 
   @doc """

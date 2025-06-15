@@ -2,7 +2,7 @@ defmodule ChatappWeb.ChatRoomController do
   use ChatappWeb, :controller
 
   alias Chatapp.ChatRooms
-  alias Chatapp.ChatRoom
+  alias Chatapp.ChatRooms.ChatRoom
 
   def index(conn, _params) do
     chat_rooms = ChatRooms.list_chat_rooms()

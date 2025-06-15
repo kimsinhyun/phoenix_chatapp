@@ -2,7 +2,7 @@ defmodule ChatappWeb.RoomChannel do
   use ChatappWeb, :channel
 
   @impl true
-  def join("room:lobby", payload, socket) do
+  def join("room:lobby", _payload, socket) do
 #    if authorized?(payload) do
       {:ok, socket}
 #    else
@@ -26,7 +26,7 @@ defmodule ChatappWeb.RoomChannel do
   end
 
   # Add authorization logic here as required.
-  defp authorized?(_payload) do
-    true
-  end
+#  defp authorized?(_payload) do
+#    true
+#  end
 end

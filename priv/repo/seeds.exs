@@ -11,7 +11,7 @@
 # and so on) as they will fail if something goes wrong.
 
 alias Chatapp.Repo
-alias Chatapp.ChatRoom
+alias Chatapp.ChatRooms.ChatRoom
 
 # 테스트용 채팅방 생성
 chat_rooms = [
