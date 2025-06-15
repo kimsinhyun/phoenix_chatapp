@@ -7,6 +7,9 @@ defmodule Chatapp.Application do
 
   @impl true
   def start(_type, _args) do
+    # ETS 테이블 생성 (온라인 사용자 추적용)
+    :ets.new(:online_users, [:set, :public, :named_table])
+
     children = [
       ChatappWeb.Telemetry,
       Chatapp.Repo,

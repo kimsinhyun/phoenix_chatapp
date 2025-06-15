@@ -61,23 +61,51 @@ defmodule ChatappWeb.ChatRoomController do
     if current_scope do
       case ChatRooms.join_chat_room_as_member(chat_room_id, current_scope.user.id) do
         {:ok, _member} ->
+          # PubSub으로 새 멤버 추가 알림
+          Phoenix.PubSub.broadcast(Chatapp.PubSub, "chat_room:#{chat_room_id}",
+            {:member_joined, current_scope.user})
+
           conn
           |> put_flash(:info, "채팅방에 성공적으로 참여했습니다.")
           |> redirect(to: ~p"/chat_rooms/#{chat_room_id}")
 
-        {:error, %Ecto.Changeset{errors: [user_id: {_, [constraint: :unique, constraint_name: _]}]}} ->
-          conn
-          |> put_flash(:info, "이미 참여한 채팅방입니다.")
-          |> redirect(to: ~p"/chat_rooms/#{chat_room_id}")
-
-        {:error, _changeset} ->
+        {:error, changeset} ->
           conn
           |> put_flash(:error, "채팅방 참여에 실패했습니다.")
           |> redirect(to: ~p"/chat_rooms")
       end
     else
       conn
-      |> put_flash(:error, "채팅방에 참여하려면 로그인이 필요합니다.")
+      |> put_flash(:error, "로그인이 필요합니다.")
+      |> redirect(to: ~p"/users/log-in")
+    end
+  end
+
+  def leave(conn, %{"id" => chat_room_id}) do
+    current_scope = conn.assigns[:current_scope]
+
+    if current_scope do
+      case ChatRooms.leave_chat_room_as_member(chat_room_id, current_scope.user.id) do
+        {:ok, _} ->
+          # PubSub으로 실시간 브로드캐스트
+          Phoenix.PubSub.broadcast(
+            Chatapp.PubSub,
+            "chat_room:#{chat_room_id}",
+            {:member_left, current_scope.user}
+          )
+
+          conn
+          |> put_flash(:info, "채팅방을 떠났습니다.")
+          |> redirect(to: ~p"/chat_rooms")
+
+        {:error, :not_found} ->
+          conn
+          |> put_flash(:error, "채팅방에 참여하지 않았습니다.")
+          |> redirect(to: ~p"/chat_rooms")
+      end
+    else
+      conn
+      |> put_flash(:error, "로그인이 필요합니다.")
       |> redirect(to: ~p"/users/log-in")
     end
   end

@@ -38,7 +38,7 @@
         </li>
       </div>
       <div class="flex items-center gap-4">
-        <%= if @current_scope do %>
+        <%= if @current_scope && @current_scope.user do %>
           <li>
             {@current_scope.user.email}
           </li>

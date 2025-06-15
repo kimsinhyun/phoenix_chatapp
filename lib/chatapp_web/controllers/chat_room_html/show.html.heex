@@ -16,7 +16,7 @@
               참여 중
             </span>
           <% else %>
-            <%= if assigns[:current_scope] do %>
+            <%= if @current_scope.user do %>
               <.form :let={f} for={%{}} action={~p"/chat_rooms/#{@chat_room.id}/join"} method="post">
                 <.button type="submit" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
                   참여하기
