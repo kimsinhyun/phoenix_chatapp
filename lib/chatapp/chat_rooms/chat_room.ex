@@ -6,6 +6,10 @@ defmodule Chatapp.ChatRooms.ChatRoom do
     field :name, :string
     field :description, :string
 
+    many_to_many :users, Chatapp.Accounts.User,
+      join_through: Chatapp.ChatRooms.ChatRoomMember,
+      on_replace: :delete
+
     timestamps(type: :utc_datetime)
   end
 

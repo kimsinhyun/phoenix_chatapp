@@ -9,6 +9,10 @@ defmodule Chatapp.Accounts.User do
     field :confirmed_at, :utc_datetime
     field :authenticated_at, :utc_datetime, virtual: true
 
+    many_to_many :chat_rooms, Chatapp.ChatRooms.ChatRoom,
+      join_through: Chatapp.ChatRooms.ChatRoomMember,
+      on_replace: :delete
+
     timestamps(type: :utc_datetime)
   end
 

@@ -7,6 +7,7 @@ defmodule Chatapp.ChatRooms do
   alias Chatapp.Repo
 
   alias Chatapp.ChatRooms.ChatRoom
+  alias Chatapp.ChatRooms.ChatRoomMember
   alias Chatapp.Accounts.User
 
   @doc """
@@ -177,5 +178,56 @@ defmodule Chatapp.ChatRooms do
     |> join(:inner, [cr], u in assoc(cr, :users))
     |> where([cr, u], u.id == ^user.id)
     |> Repo.all()
+  end
+
+  @doc """
+  Adds a user to a chat room using ChatRoomMember.
+
+  ## Examples
+
+      iex> join_chat_room_as_member(chat_room_id, user_id)
+      {:ok, %ChatRoomMember{}}
+
+      iex> join_chat_room_as_member(chat_room_id, user_id)
+      {:error, %Ecto.Changeset{}}
+
+  """
+  def join_chat_room_as_member(chat_room_id, user_id) do
+    attrs = %{chat_room_id: chat_room_id, user_id: user_id}
+
+    %ChatRoomMember{}
+    |> ChatRoomMember.changeset(attrs)
+    |> Repo.insert()
+  end
+
+  @doc """
+  Removes a user from a chat room using ChatRoomMember.
+
+  ## Examples
+
+      iex> leave_chat_room_as_member(chat_room_id, user_id)
+      {:ok, %ChatRoomMember{}}
+
+  """
+  def leave_chat_room_as_member(chat_room_id, user_id) do
+    case Repo.get_by(ChatRoomMember, chat_room_id: chat_room_id, user_id: user_id) do
+      nil -> {:error, :not_found}
+      member -> Repo.delete(member)
+    end
+  end
+
+  @doc """
+  Checks if a user is a member of a chat room.
+
+  ## Examples
+
+      iex> is_member?(chat_room_id, user_id)
+      true
+
+  """
+  def is_member?(chat_room_id, user_id) do
+    ChatRoomMember
+    |> where([m], m.chat_room_id == ^chat_room_id and m.user_id == ^user_id)
+    |> Repo.exists?()
   end
 end

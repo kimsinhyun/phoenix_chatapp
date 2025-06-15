@@ -29,9 +29,17 @@
           <span class="text-sm text-gray-500">
             생성일: <%= Calendar.strftime(chat_room.inserted_at, "%Y-%m-%d") %>
           </span>
-          <button class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
-            참여하기
-          </button>
+          <%= if chat_room.id in @joined_room_ids do %>
+            <span class="bg-green-500 text-white font-bold py-2 px-4 rounded">
+              참여 중
+            </span>
+          <% else %>
+            <.form :let={f} for={%{}} action={~p"/chat_rooms/#{chat_room.id}/join"} method="post">
+              <.button type="submit" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+                참여하기
+              </.button>
+            </.form>
+          <% end %>
         </div>
       </div>
     <% end %>
