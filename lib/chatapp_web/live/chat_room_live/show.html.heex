@@ -89,7 +89,7 @@
       
       <!-- 디버깅 정보 (개발 중에만 표시) -->
       <%= if Mix.env() == :dev do %>
-        <div class="mb-4 p-2 bg-yellow-100 text-xs">
+        <div class="mb-4 p-2 bg-black text-xs">
           <p>온라인 사용자 수: <%= MapSet.size(@online_users) %></p>
           <p>온라인 사용자 ID: <%= inspect(MapSet.to_list(@online_users)) %></p>
           <%= if @current_scope do %>

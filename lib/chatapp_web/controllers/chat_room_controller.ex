@@ -24,19 +24,19 @@ defmodule ChatappWeb.ChatRoomController do
     )
   end
 
-  def show(conn, %{"id" => id}) do
-    chat_room = ChatRooms.get_chat_room_with_users!(id)
-    current_scope = conn.assigns[:current_scope]
-
-    # 현재 사용자가 참여한 채팅방인지 확인
-    is_member = if current_scope do
-      ChatRooms.is_user_member_of_chat_room?(current_scope.user.id, chat_room.id)
-    else
-      false
-    end
-
-    render(conn, :show, chat_room: chat_room, is_member: is_member, current_scope: current_scope)
-  end
+#  def show(conn, %{"id" => id}) do
+#    chat_room = ChatRooms.get_chat_room_with_users!(id)
+#    current_scope = conn.assigns[:current_scope]
+#
+#    # 현재 사용자가 참여한 채팅방인지 확인
+#    is_member = if current_scope do
+#      ChatRooms.is_user_member_of_chat_room?(current_scope.user.id, chat_room.id)
+#    else
+#      false
+#    end
+#
+#    render(conn, :show, chat_room: chat_room, is_member: is_member, current_scope: current_scope)
+#  end
 
   def new(conn, _params) do
     changeset = ChatRooms.change_chat_room(%ChatRoom{})
